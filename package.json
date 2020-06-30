@@ -1,0 +1,40 @@
+{
+  "name": "3dcger_model_info",
+  "version": "1.0.0",
+  "description": "3d model detail page",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "npm run dev",
+    "b": "rimraf dist && webpack --config ./build/webpack.prod.conf.js",
+    "build": "cross-env npm run b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caoanlong/3dcger_model_info.git"
+  },
+  "author": "Aaron",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caoanlong/3dcger_model_info/issues"
+  },
+  "homepage": "https://github.com/caoanlong/3dcger_model_info#readme",
+  "devDependencies": {
+    "@babel/core": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
+    "compression-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^6.0.2",
+    "cross-env": "^7.0.2",
+    "html-webpack-plugin": "^4.3.0",
+    "rimraf": "^3.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "qs": "^6.9.4"
+  }
+}
