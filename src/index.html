@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no,maximum-scale=1">
     <meta name="referrer" content="never">
-    <title>Document</title>
+    <title>3dcger</title>
     <style>
         html, body, div, span, applet, object, iframe,
         h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -44,6 +44,8 @@
         }
         body {
             line-height: 1;
+            overflow: hidden;
+            font-family: 'Helvetica Neue',Tahoma,Arial,PingFangSC-Regular,'Hiragino Sans GB','Microsoft Yahei',sans-serif;
         }
         ol, ul {
             list-style: none;
@@ -101,7 +103,8 @@
             z-index: 1;
             background-size: cover;
             background-position: center;
-            filter: blur(6px);
+            background-repeat: no-repeat;
+            filter: blur(5px);
         }
         #canvas {
             width: 100%;
@@ -109,7 +112,19 @@
             font-size: 36px;
             color: #555555;
             text-align: center;
-            background-color: #111111;
+            background: linear-gradient(#b7bdc8, #78797d);
+        }
+        #website {
+            display: block;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            z-index: 5;
+            width: 100%;
+            text-align: center;
+            color: #ffffff;
+            opacity: 0.5;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -118,7 +133,7 @@
         <div id="progressBar"></div>
     </div>
     <div id="thumbnail"></div>
+    <a id="website" target="_blank"></a>
     <div id="canvas"></div>
-    <script src="https://raw.github.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 </body>
 </html>

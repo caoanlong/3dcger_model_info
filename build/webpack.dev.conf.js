@@ -29,7 +29,8 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: '"development"'
+                NODE_ENV: '"development"',
+                WEB_SITE: '"3dcger.cn"'
             }
         }),
         new HtmlWebpackPlugin({

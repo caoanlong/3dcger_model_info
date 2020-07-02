@@ -11,14 +11,17 @@ const canvas = document.getElementById('canvas')
 const thumbnail = document.getElementById('thumbnail')
 const progress = document.getElementById('progress')
 const progressBar = document.getElementById('progressBar')
+const website = document.getElementById('website')
 canvas.style.lineHeight = window.innerHeight + 'px'
+
+website.innerHTML = process.env.WEB_SITE
+website.href = 'http://' + process.env.WEB_SITE
 if (!id) {
     canvas.innerText = 'Not found id'
     throw new Error('Not found id')
 }
 const staticUrl = 'http://static.cgers.art/'
-thumbnail.style.backgroundImage = `url(${staticUrl}${id}/thumbnail.png)`
-
+thumbnail.style.backgroundImage = `url(${staticUrl}${id}/thumbnail_s.png)`
 let width = canvas.offsetWidth
 let height = canvas.offsetHeight
 const progressWidth = progress.offsetWidth
@@ -94,7 +97,7 @@ fetch(url).then(res => {
             })
         } else {
             if (res.skyBgMode === 'Color') {
-                scene.background = res.skyBgColor
+                canvas.style.background = res.skyBgColor
             }
             loadGltf(gltfUrl, res.materials)
         }
