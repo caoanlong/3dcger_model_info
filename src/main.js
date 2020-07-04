@@ -60,7 +60,7 @@ camera.position.set(0, 0, 5)
 render()
 new THREE.OrbitControls(camera, renderer.domElement)
 
-const url = `/api/scene/findInfo?id=${id}`
+const url = (process.env.NODE_ENV === "development" ? '/api' : '') + `/scene/findInfo?id=${id}`
 fetch(url).then(res => {
     if (res.status === 200) {
         return res.json()
@@ -85,7 +85,9 @@ fetch(url).then(res => {
                 const texture = pmremGenerator.fromEquirectangular(hdrTexture).texture
                 scene.environment = texture
                 if (res.skyBgMode === 'Sky') scene.background = texture
-                
+                if (res.skyBgMode === 'Color') {
+                    canvas.style.background = res.skyBgColor
+                }
                 loadGltf(gltfUrl, res.materials)
             }, (e) => {
                 const rate = e.loaded / e.total
@@ -163,6 +165,8 @@ function loadGltf(gltfUrl, materials) {
                     node.material.reflectivity = mtl.reflectivity
                     node.material.clearcoat = mtl.clearcoat
                     node.material.clearcoatRoughness = mtl.clearcoatRoughness
+                    node.material.side = mtl.side
+                    node.material.alphaTest = 0.5
                 }
                 i++
             }

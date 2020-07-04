@@ -15,7 +15,10 @@ module.exports = {
         proxy: {
             '/api': {
                 target: 'http://cgers.art',
-                changeOrigin: true
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
             }
         }
     },
