@@ -20,7 +20,7 @@ if (!id) {
     canvas.innerText = 'Not found id'
     throw new Error('Not found id')
 }
-const staticUrl = 'http://static.cgers.art/'
+const staticUrl = process.env.STATIC_URL
 thumbnail.style.backgroundImage = `url(${staticUrl}${id}/thumbnail_s.png)`
 let width = canvas.offsetWidth
 let height = canvas.offsetHeight

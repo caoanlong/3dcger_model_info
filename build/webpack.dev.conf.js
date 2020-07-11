@@ -3,6 +3,16 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const CopyWebpackPlugin = require('copy-webpack-plugin')
 
+const platform = process.env.npm_config_platform
+let WEB_SITE = '"cgers.art"', STATIC_URL = '"http://static.cgers.art/"'
+if (platform === 'cn') {
+    WEB_SITE = '"3dcger.cn"'
+    STATIC_URL = '"http://static.3dcger.cn/"'
+} else if (platform == 'com') {
+    WEB_SITE = '"3dcger.com"'
+    STATIC_URL = '"http://static.3dcger.com/"'
+}
+
 module.exports = {
     context: path.resolve(__dirname, '../'),
     devServer: {
@@ -33,7 +43,8 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"development"',
-                WEB_SITE: '"3dcger.cn"'
+                WEB_SITE: WEB_SITE,
+                STATIC_URL: STATIC_URL
             }
         }),
         new HtmlWebpackPlugin({
