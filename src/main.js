@@ -21,7 +21,7 @@ if (!id) {
     throw new Error('Not found id')
 }
 const staticUrl = process.env.STATIC_URL
-thumbnail.style.backgroundImage = `url(${staticUrl}${id}/thumbnail_s.png)`
+
 let width = canvas.offsetWidth
 let height = canvas.offsetHeight
 const progressWidth = progress.offsetWidth
@@ -70,13 +70,14 @@ fetch(url).then(res => {
 }).then(response => {
     if (response.code === 200) {
         const res = response.data
-        const baseUrl = staticUrl + id + '/'
-        const gltfUrl = baseUrl + res.modelFileUrls.replace(/\.obj/ig, '.gltf')
+        const t_url = res.thumbnail.replace('thumbnail', 'thumbnail_s')
+        thumbnail.style.backgroundImage = `url(${staticUrl}${t_url})`
+        const gltfUrl = staticUrl + res.modelFileUrls.replace(/\.obj/ig, '.gltf')
         renderer.toneMappingExposure = res.exposure
         renderer.gammaFactor = res.gammaFactor
         if (res.skyBgUrl) {
             const rgbeLoader = new THREE.RGBELoader().setDataType(THREE.UnsignedByteType)
-            rgbeLoader.load(baseUrl + res.skyBgUrl, (hdrTexture, data) => {
+            rgbeLoader.load(staticUrl + res.skyBgUrl, (hdrTexture, data) => {
                 hdrTexture.encoding = THREE.RGBEEncoding
                 hdrTexture.minFilter = THREE.LinearFilter
                 hdrTexture.magFilter = THREE.LinearFilter
