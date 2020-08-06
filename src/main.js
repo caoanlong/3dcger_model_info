@@ -1,4 +1,5 @@
 import qs from 'qs'
+import $ from './js/jquery.min'
 import THREE from './js/three.module'
 import EnvironmentScene from './js/EnvironmentScene'
 import RefracMaterial from './js/RefracMaterial'
@@ -7,25 +8,23 @@ import './js/RGBELoader'
 import './js/OrbitControls'
 
 const { id } = qs.parse(location.search.replace(/\?/, ''))
-const canvas = document.getElementById('canvas')
-const thumbnail = document.getElementById('thumbnail')
-const progress = document.getElementById('progress')
-const progressBar = document.getElementById('progressBar')
-const website = document.getElementById('website')
-canvas.style.lineHeight = window.innerHeight + 'px'
+const canvas = $('#canvas')
+const progress = $('#progress')
+canvas.css('lineHeight', window.innerHeight + 'px')
 
-website.innerHTML = process.env.WEB_SITE
-website.href = 'http://' + process.env.WEB_SITE
+$('#website').html(process.env.WEB_SITE).attr('href', 'http://' + process.env.WEB_SITE)
+
 if (!id) {
-    canvas.innerText = 'Not found id'
-    throw new Error('Not found id')
+    canvas.text('Id not found')
+    throw new Error('Id not found')
+} else {
+    progress.css('display', 'flex')
+    $('#thumbnail').show()
 }
 const staticUrl = process.env.STATIC_URL
 
-let width = canvas.offsetWidth
-let height = canvas.offsetHeight
-const progressWidth = progress.offsetWidth
-let pWidth1 = 0, pWidth2 = 0
+let width = canvas.width()
+let height = canvas.height()
 
 const renderer = new THREE.WebGLRenderer({
     preserveDrawingBuffer: true,  //将渲染保存到缓冲区，否则获取的图片会是空的
@@ -44,7 +43,8 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.shadowMap.autoUpdate = false
-canvas.appendChild(renderer.domElement)
+
+canvas.append(renderer.domElement)
 
 const scene = new THREE.Scene()
 const pmremGenerator = new THREE.PMREMGenerator(renderer)
@@ -61,17 +61,15 @@ render()
 new THREE.OrbitControls(camera, renderer.domElement)
 
 const url = (process.env.NODE_ENV === "development" ? '/api' : '') + `/scene/findInfo?id=${id}`
-fetch(url).then(res => {
-    if (res.status === 200) {
-        return res.json()
-    } else {
-        canvas.innerText = res.status + ' ' + res.statusText
-    }
-}).then(response => {
-    if (response.code === 200) {
+$.ajax({
+    url: url,
+    contentType: "application/json;charset=utf-8",
+    dataType: "json"
+}).done(function (response) {
+    if (response.code == 200) {
         const res = response.data
         const t_url = res.thumbnail.replace('thumbnail', 'thumbnail_s')
-        thumbnail.style.backgroundImage = `url(${staticUrl}${t_url})`
+        $('.t-2').css('backgroundImage', 'url(' + staticUrl + t_url + ')')
         const gltfUrl = staticUrl + res.modelFileUrls.replace(/\.obj/ig, '.gltf')
         renderer.toneMappingExposure = res.exposure
         renderer.gammaFactor = res.gammaFactor
@@ -87,38 +85,30 @@ fetch(url).then(res => {
                 scene.environment = texture
                 if (res.skyBgMode === 'Sky') scene.background = texture
                 if (res.skyBgMode === 'Color') {
-                    canvas.style.background = res.skyBgColor
+                    canvas.css('background', res.skyBgColor)
                 }
                 loadGltf(gltfUrl, res.materials)
             }, (e) => {
-                const rate = e.loaded / e.total
-                pWidth1 = progressWidth * 0.4 * rate
-                progressBar.style.width = pWidth1 + 'px'
+                // console.log(e)
+                // const rate = e.loaded / e.total
             }, err => {
                 console.log(err)
                 loadGltf(gltfUrl, res.materials)
             })
         } else {
             if (res.skyBgMode === 'Color') {
-                canvas.style.background = res.skyBgColor
+                canvas.css('background', res.skyBgColor)
             }
             loadGltf(gltfUrl, res.materials)
         }
+    } else {
+        progress.hide()
+        $('#thumbnail').hide()
+        canvas.text(response.msg)
     }
+}).fail(function (err) {
+    console.log(err.responseJSON)
 })
-document.onreadystatechange = function () {
-    console.log(document.readyState)
-    if (document.readyState == 'complete') {
-        progressBar.style.width = progressWidth + 'px'
-        setTimeout(() => {
-            thumbnail.className = 'fade'
-            progress.style.display = 'none'
-            setTimeout(() => {
-                thumbnail.style.display = 'none'
-            }, 1000)
-        }, 500)
-    }
-}
 
 function resizeWin() {
     width = window.innerWidth
@@ -173,10 +163,11 @@ function loadGltf(gltfUrl, materials) {
             }
         })
         scene.add(gltf.scene)
+        progress.hide()
+        $('#thumbnail').fadeOut(2000)
     }, (e) => {
-        const rate = e.loaded / e.total
-        pWidth2 = progressWidth * 0.4 * rate
-        progressBar.style.width = (pWidth1 + pWidth2) + 'px'
+        // const rate = e.loaded / e.total
+        // console.log(e)
     }, (err) => {
 
     })

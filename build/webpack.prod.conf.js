@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 const platform = process.env.npm_config_platform
@@ -33,6 +34,9 @@ module.exports = {
             template: './src/index.html',
             favicon: './src/favicon.ico',
             inject: true
+        }),
+        new CopyWebpackPlugin({
+            patterns: [{ from: './src/imgs', to: 'imgs' }]
         }),
         new CompressionWebpackPlugin({
             filename: '[path].gz[query]',
