@@ -182,7 +182,7 @@ function loadGltf(json, materials, resourcePath) {
         // const rate = e.loaded / e.total
         // console.log(e)
     }, (err) => {
-
+        console.log(err)
     }, resourcePath)
 }
 

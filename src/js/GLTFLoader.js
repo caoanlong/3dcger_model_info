@@ -75,7 +75,7 @@ THREE.GLTFLoader = ( function () {
 
 						onLoad( gltf );
 
-						scope.manager.itemEnd( url );
+						// scope.manager.itemEnd( url );
 
 					}, _onError );
 
