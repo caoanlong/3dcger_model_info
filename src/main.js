@@ -7,6 +7,17 @@ import './js/GLTFLoader'
 import './js/RGBELoader'
 import './js/OrbitControls'
 
+import './js/crypto-js/core'
+import './js/crypto-js/enc-base64'
+import './js/crypto-js/md5'
+import './js/crypto-js/evpkdf'
+import './js/crypto-js/cipher-core'
+import './js/crypto-js/aes'
+import './js/crypto-js/pad-pkcs7'
+import './js/crypto-js/mode-ecb'
+import './js/crypto-js/enc-utf8'
+import './js/crypto-js/enc-hex'
+
 const { id } = qs.parse(location.search.replace(/\?/, ''))
 const canvas = $('#canvas')
 const progress = $('#progress')
@@ -70,9 +81,11 @@ $.ajax({
         const res = response.data
         const t_url = res.thumbnail.replace('thumbnail', 'thumbnail_s')
         $('.t-2').css('backgroundImage', 'url(' + staticUrl + t_url + ')')
-        const gltfUrl = staticUrl + res.modelFileUrls.replace(/\.obj/ig, '.gltf')
+        // const gltfUrl = staticUrl + res.modelFileUrls.replace(/\.obj/ig, '.gltf')
         renderer.toneMappingExposure = res.exposure
         renderer.gammaFactor = res.gammaFactor
+        const json = Decrypt(res.id.substring(0, 16), res.mtext)
+        const resourcePath = staticUrl + res.modelFileUrls.split(res.id)[0] + res.id + '/'
         if (res.skyBgUrl) {
             const rgbeLoader = new THREE.RGBELoader().setDataType(THREE.UnsignedByteType)
             rgbeLoader.load(staticUrl + res.skyBgUrl, (hdrTexture, data) => {
@@ -87,19 +100,19 @@ $.ajax({
                 if (res.skyBgMode === 'Color') {
                     canvas.css('background', res.skyBgColor)
                 }
-                loadGltf(gltfUrl, res.materials)
+                loadGltf(json, res.materials, resourcePath)
             }, (e) => {
                 // console.log(e)
                 // const rate = e.loaded / e.total
             }, err => {
                 console.log(err)
-                loadGltf(gltfUrl, res.materials)
+                loadGltf(json, res.materials, resourcePath)
             })
         } else {
             if (res.skyBgMode === 'Color') {
                 canvas.css('background', res.skyBgColor)
             }
-            loadGltf(gltfUrl, res.materials)
+            loadGltf(json, res.materials, resourcePath)
         }
     } else {
         progress.hide()
@@ -126,9 +139,9 @@ function render() {
     renderer.render(scene, camera)
     requestAnimationFrame(render)
 }
-function loadGltf(gltfUrl, materials) {
+function loadGltf(json, materials, resourcePath) {
     const gltfLoader = new THREE.GLTFLoader()
-    gltfLoader.load(gltfUrl, gltf => {
+    gltfLoader.load(json, gltf => {
         makeCenterScale(gltf.scene)
         let i = 0
         gltf.scene.traverse((node) => {
@@ -170,7 +183,7 @@ function loadGltf(gltfUrl, materials) {
         // console.log(e)
     }, (err) => {
 
-    })
+    }, resourcePath)
 }
 
 /**
@@ -187,4 +200,23 @@ function makeCenterScale(group) {
     bbox.getSize(size)
     //Reposition to 0,halfY,0
     group.position.copy(cent).multiplyScalar(-1)
+}
+
+function Decrypt(key, word) {
+    key = CryptoJS.enc.Utf8.parse(key)
+    let encryptedHexStr = CryptoJS.enc.Hex.parse(word)
+    let encryptedBase64Str = CryptoJS.enc.Base64.stringify(encryptedHexStr)
+    let decrypt = CryptoJS.AES.decrypt(encryptedBase64Str, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    return decrypt.toString(CryptoJS.enc.Utf8)
+}
+
+function Encrypt(key, word) {
+    var encrypted = CryptoJS.AES.encrypt(word, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    return encrypted.toString()
 }

@@ -14,30 +14,30 @@ THREE.GLTFLoader = ( function () {
 
 		constructor: GLTFLoader,
 
-		load: function ( url, onLoad, onProgress, onError ) {
+		load: function (data, onLoad, onProgress, onError, resourcePath) {
 
-			var scope = this;
+			// var scope = this;
 
-			var resourcePath;
+			// var resourcePath;
 
-			if ( this.resourcePath !== '' ) {
+			// if ( this.resourcePath !== '' ) {
 
-				resourcePath = this.resourcePath;
+			// 	resourcePath = this.resourcePath;
 
-			} else if ( this.path !== '' ) {
+			// } else if ( this.path !== '' ) {
 
-				resourcePath = this.path;
+			// 	resourcePath = this.path;
 
-			} else {
+			// } else {
 
-				resourcePath = THREE.LoaderUtils.extractUrlBase( url );
+			// 	resourcePath = THREE.LoaderUtils.extractUrlBase( url );
 
-			}
+			// }
 
-			// Tells the LoadingManager to track an extra item, which resolves after
-			// the model is fully loaded. This means the count of items loaded will
-			// be incorrect, but ensures manager.onLoad() does not fire early.
-			scope.manager.itemStart( url );
+			// // Tells the LoadingManager to track an extra item, which resolves after
+			// // the model is fully loaded. This means the count of items loaded will
+			// // be incorrect, but ensures manager.onLoad() does not fire early.
+			// scope.manager.itemStart( url );
 
 			var _onError = function ( e ) {
 
@@ -51,27 +51,27 @@ THREE.GLTFLoader = ( function () {
 
 				}
 
-				scope.manager.itemError( url );
-				scope.manager.itemEnd( url );
+				// scope.manager.itemError( url );
+				// scope.manager.itemEnd( url );
 
 			};
 
-			var loader = new THREE.FileLoader( scope.manager );
+			// var loader = new THREE.FileLoader( scope.manager );
 
-			loader.setPath( this.path );
-			loader.setResponseType( 'arraybuffer' );
+			// loader.setPath( this.path );
+			// loader.setResponseType( 'arraybuffer' );
 
-			if ( scope.crossOrigin === 'use-credentials' ) {
+			// if ( scope.crossOrigin === 'use-credentials' ) {
 
-				loader.setWithCredentials( true );
+			// 	loader.setWithCredentials( true );
 
-			}
+			// }
 
-			loader.load( url, function ( data ) {
+			// loader.load( url, function ( data ) {
 
-				try {
+			// 	try {
 
-					scope.parse( data, resourcePath, function ( gltf ) {
+					this.parse( data, resourcePath, function ( gltf ) {
 
 						onLoad( gltf );
 
@@ -79,13 +79,13 @@ THREE.GLTFLoader = ( function () {
 
 					}, _onError );
 
-				} catch ( e ) {
+			// 	} catch ( e ) {
 
-					_onError( e );
+			// 		_onError( e );
 
-				}
+			// 	}
 
-			}, onProgress, _onError );
+			// }, onProgress, _onError );
 
 		},
 
@@ -103,7 +103,7 @@ THREE.GLTFLoader = ( function () {
 
 		},
 
-		parse: function ( data, path, onLoad, onError ) {
+		parse: function (data, path, onLoad, onError ) {
 
 			var content;
 			var extensions = {};
@@ -202,7 +202,6 @@ THREE.GLTFLoader = ( function () {
 				}
 
 			}
-
 			var parser = new GLTFParser( json, extensions, {
 
 				path: path || this.resourcePath || '',
