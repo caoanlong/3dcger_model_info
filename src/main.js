@@ -81,7 +81,6 @@ $.ajax({
         const res = response.data
         const t_url = res.thumbnail.replace('thumbnail', 'thumbnail_s')
         $('.t-2').css('backgroundImage', 'url(' + staticUrl + t_url + ')')
-        // const gltfUrl = staticUrl + res.modelFileUrls.replace(/\.obj/ig, '.gltf')
         renderer.toneMappingExposure = res.exposure
         renderer.gammaFactor = res.gammaFactor
         const json = Decrypt(res.id.substring(0, 16), res.mtext)
@@ -172,6 +171,7 @@ function loadGltf(json, materials, resourcePath) {
                     node.material.side = mtl.side
                     node.material.alphaTest = 0.5
                 }
+                node.material.flatShading = mtl.flatShading || false
                 i++
             }
         })
