@@ -7,7 +7,7 @@ const platform = process.env.npm_config_platform
 let WEB_SITE = '"cgers.art"', STATIC_URL = '"http://static.cgers.art/"'
 if (platform === 'cn') {
     WEB_SITE = '"3dcger.cn"'
-    STATIC_URL = '"http://static.3dcger.cn/"'
+    STATIC_URL = '"https://static.3dcger.cn/"'
 } else if (platform == 'com') {
     WEB_SITE = '"3dcger.com"'
     STATIC_URL = '"http://static.3dcger.com/"'

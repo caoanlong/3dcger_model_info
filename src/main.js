@@ -23,7 +23,7 @@ const canvas = $('#canvas')
 const progress = $('#progress')
 canvas.css('lineHeight', window.innerHeight + 'px')
 
-$('#website').html(process.env.WEB_SITE).attr('href', 'http://' + process.env.WEB_SITE)
+$('#website').html(process.env.WEB_SITE).attr('href', process.env.STATIC_URL.replace('static.', ''))
 
 if (!id) {
     canvas.text('Id not found')
