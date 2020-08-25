@@ -5,7 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 const platform = process.env.npm_config_platform
-let WEB_SITE = '"cgers.art"', STATIC_URL = '"http://static.cgers.art/"'
+let WEB_SITE = '"cgers.art"',
+    STATIC_URL = '"http://static.cgers.art/"'
 if (platform === 'cn') {
     WEB_SITE = '"3dcger.cn"'
     STATIC_URL = '"https://static.3dcger.cn/"'
@@ -47,17 +48,15 @@ module.exports = {
         })
     ],
     module: {
-        rules: [
-            {
-                test: /\.m?js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
+        rules: [{
+            test: /\.m?js$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env']
                 }
             }
-        ]
+        }]
     }
 }

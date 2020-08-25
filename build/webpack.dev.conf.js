@@ -26,9 +26,9 @@ module.exports = {
             '/api': {
                 target: url,
                 changeOrigin: true,
-                pathRewrite: {
-                    '^/api': ''
-                }
+                // pathRewrite: {
+                //     '^/api': ''
+                // }
             }
         }
     },
